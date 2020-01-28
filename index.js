@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
-//const objectsToCSV = require("objects-to-csv");
-const fs = require('fs');
+const objectsToCSV = require("objects-to-csv");
+//const fs = require('fs');
 
 const rippleBody = { method: 'POST',
                     headers:{
@@ -19,7 +19,7 @@ const callsErrorCounter = 0;
 let tempSuccessCounter = 0;
 
 let data = [];
-
+console.time('medida');
 async function getData(){
     try{
 
@@ -28,25 +28,21 @@ async function getData(){
         const messageData = await response.json();
         
         if (response.status === 200){
-            if (tempSuccessCounter <= 5) {
+            if (tempSuccessCounter <= 100) {
                 
                 tempSuccessCounter++;
                 
-                data.push([messageData.result.info.validated_ledger.seq, messageData.result.info.time]);
+                data.push([messageData.result.info.time, messageData.result.info.validated_ledger.seq]);
     
             } else {
-                /* const csv = new objectsToCSV(data);
-                await csv.toDisk('./data.csv'); */
-                await fs.writeFile('data.txt', data, (err) => {
-                    
-                    if(err) throw err;
-                    
-                })
-                console.log('ledger_analisys script is finished. Success calls to rippled API: ' + tempSuccessCounter +", and failed calls: " + callsErrorCounter);
+                const csv = new objectsToCSV(data);
+                await csv.toDisk('./data.csv');
+                console.log('ledger_analisys script is finished. The data has been saved on data.txt.');
+                console.log('Success calls to rippled API: ' + tempSuccessCounter +", and failed calls: " + callsErrorCounter);
                 clearInterval(rippleValidatedLedger);
             }
         } else {
-    
+            
             callsErrorCounter++;    
         }
     } catch (error) {
@@ -54,6 +50,7 @@ async function getData(){
         clearInterval(rippleValidatedLedger);
     }
 }
+console.timeEnd('medida');
 
-const rippleValidatedLedger = setInterval(getData, 1000);
+const rippleValidatedLedger = setInterval(getData, 200);
 console.log("ledger_analisys script is running...");
