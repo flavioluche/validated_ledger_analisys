@@ -16,11 +16,12 @@ const call = 'https://s1.ripple.com:51234/server_info';
 
 const callsErrorCounter = 0;
 
-let tempSuccessCounter = 0;
+let SuccessCounter = 0;
 
-let data = [];
-console.time('medida');
+let data = []
+
 async function getData(){
+    
     try{
 
         const response = await fetch(call, rippleBody);
@@ -28,18 +29,18 @@ async function getData(){
         const messageData = await response.json();
         
         if (response.status === 200){
-            if (tempSuccessCounter <= 100) {
+            if (SuccessCounter <= 600) {
                 
-                tempSuccessCounter++;
+                SuccessCounter++;
                 
                 data.push([messageData.result.info.time, messageData.result.info.validated_ledger.seq]);
     
             } else {
                 const csv = new objectsToCSV(data);
                 await csv.toDisk('./data.csv');
-                console.log('ledger_analisys script is finished. The data has been saved on data.txt.');
-                console.log('Success calls to rippled API: ' + tempSuccessCounter +", and failed calls: " + callsErrorCounter);
                 clearInterval(rippleValidatedLedger);
+                console.log('ledger_analisys script is finished. The data has been saved on data.csv.');
+                console.log('Success calls to rippled API: ' + SuccessCounter +", and failed calls: " + callsErrorCounter);
             }
         } else {
             
@@ -49,8 +50,8 @@ async function getData(){
         console.log("An error ocurred: " + error);
         clearInterval(rippleValidatedLedger);
     }
+    
 }
-console.timeEnd('medida');
 
-const rippleValidatedLedger = setInterval(getData, 200);
-console.log("ledger_analisys script is running...");
+const rippleValidatedLedger = setInterval(getData, 100);
+console.log("validated_ledger_analisys script is running...");

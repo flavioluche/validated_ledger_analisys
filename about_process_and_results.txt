@@ -1,0 +1,18 @@
+This is a simple nodeJS script, it begins with a setInterval calling the function getData in an interval of 100ms.
+The getData() is an asyncrhonous function that uses a lib called node-fetch to call the method "server_info" of the rippled API. It gets the results and add in an array the time and the sequence number of the validation ledger.
+
+There is a counter variable to control the amount of calls (set to finish around 1 minute), also used to compute the amount of successful calls. There is an error counter variable as well.
+When the amount of successful calls reaches the predefined number, a csv file is created using the lib objects-to-csv.
+
+● How did you decide on your polling interval?
+In order to have a closer view of how often the ledger sequence is incremented over time, I decided to pull data every 100 miliseconds. With that I could have a more assertive analisys and find out how often new ledgers are validated.
+
+
+● What do the results tell you?
+The results shows that there is a tiny variation in the time until a new ledger is generated. The average time is 3.X and the variation goes from X to X.
+
+
+The variation in time between new ledgers may happen due to some factors.
+One factor that could cause bigger impact in new ledgers would be, no supermajority of participants is clear from received validations, after the validation votes from the prevoius consensus round. This is a extremely rare case, but it could have a relevant impact.
+Although it is known that the impact is minimum, variations can also be caused when all participants are reaching consensus, depending on the amount of conflicting transactions in a set, participants may take longer to order transactions and solve The Double Spend Problem, agreeing and disagreeing in a transaction.
+On rare occasions, the network as a whole fails to make forward progress for a few seconds. In exchange, average transaction confirmation times are low.
