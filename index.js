@@ -48,7 +48,7 @@ async function getData() {
     } else {
         const csv = new objectsToCSV(data);
         await csv.toDisk('./data.csv');
-        console.log(removeDuplicates(data));
+
         clearInterval(rippleValidatedLedger);
         console.log('ledger_analisys script is finished. The data has been saved on data.csv.');
         console.log('Success calls to rippled API: ' + successCounter + ", and failed calls: " + callsErrorCounter);
@@ -56,14 +56,5 @@ async function getData() {
 
 }
 
-function removeDuplicates(array) {
-    let a = []
-    array[1].map(x => {
-      if(!a.includes(x[1])) {
-        a.push(x)
-      }
-    return a;
-    })
-  };
 const rippleValidatedLedger = setInterval(getData, 100);
 console.log("validated_ledger_analisys script is running...");
