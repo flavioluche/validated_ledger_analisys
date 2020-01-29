@@ -1,15 +1,13 @@
 This is a simple nodeJS script, it begins with a setInterval calling the function getData in an interval of 100ms.
-The getData() is an asyncrhonous function that uses a lib called node-fetch to call the method "server_info" of the rippled API. It gets the results and add in an array the time and the sequence number of the validation ledger.
+The getData() is an asyncrhonous function that uses a lib called node-fetch to call the method "server_info" of the rippled API. It gets the results and add in an array the current time and the sequence number of the validation ledger.
 
 There is a counter variable to control the amount of calls (set to finish around 1 minute), also used to compute the amount of successful calls. There is an error counter variable as well.
 When the amount of successful calls reaches the predefined number, a csv file is created using the lib objects-to-csv.
 
-● How did you decide on your polling interval?
+
 In order to have a closer view of how often the ledger sequence is incremented over time, I decided to pull data every 100 miliseconds. With that I could have a more assertive analisys and find out how often new ledgers are validated.
 
-
-● What do the results tell you?
-The results shows that there is a tiny variation in the time until a new ledger is generated. The average time is 3.X and the variation goes from X to X.
+The results shows that new ledgers are generated on avarage, every 3.707 seconds. Considering the total period, a tiny variation of 665 milliseconds can be identified, the fastest new ledger generated took 3.304 seconds and the longer, 3.969 seconds
 
 
 The variation in time between new ledgers may happen due to some factors.
